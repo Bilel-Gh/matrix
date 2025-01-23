@@ -67,3 +67,118 @@ class Vector:
         """
         for i in range(self.shape()):
             self.values[i] *= scalar
+
+    def dot(self, v: 'Vector') -> float:
+        """
+        Calcule le produit scalaire entre deux vecteurs (dot product).
+
+        Le produit scalaire est la somme des produits des composantes :
+        [a1, a2] · [b1, b2] = (a1 * b1) + (a2 * b2)
+
+        Args:
+            v: Second vecteur pour le produit scalaire
+
+        Returns:
+            float: Résultat du produit scalaire
+
+        Raises:
+            ValueError: Si les vecteurs n'ont pas la même dimension
+        """
+        if self.shape() != v.shape():
+            raise ValueError("Vectors must have same dimension")
+        result = 0
+        for a, b in zip(self.values, v.values):
+            result += a * b
+
+        return result
+
+    def norm_1(self) -> float:
+        """
+        Calcule la norme-1 (Manhattan) du vecteur.
+
+        La norme-1 est la somme des valeurs absolues des composantes :
+        Pour un vecteur [x₁, x₂, ..., xₙ], norme = |x₁| + |x₂| + ... + |xₙ|
+
+        Returns:
+            float: La norme-1 du vecteur
+
+        Example:
+            v = Vector([1, -2, 3])
+            v.norm_1()  # Retourne 6 (|1| + |-2| + |3| = 1 + 2 + 3 = 6)
+        """
+        result = 0
+        for x in self.values:
+            if x > 0:
+                value = x
+            else:
+                value = -x
+            result += value
+        return result
+
+    def norm(self) -> float:
+        """
+        Calcule la norme-2 (Euclidienne) du vecteur.
+
+        La norme-2 est la racine carrée de la somme des carrés des composantes :
+        Pour un vecteur [x₁, x₂, ..., xₙ], norme = √(x₁² + x₂² + ... + xₙ²)
+
+        Returns:
+            float: La norme-2 (Euclidienne) du vecteur
+
+        Example:
+            v = Vector([3, 4])
+            v.norm()  # Retourne 5.0 (√(3² + 4²) = √(9 + 16) = √25 = 5)
+        """
+        sum_squares = 0
+        for x in self.values:
+            sum_squares += x * x # ou pow(x, 2)
+        return pow(sum_squares, 0.5) # pow(x, 0.5) = racine carre de x
+
+    def norm_inf(self) -> float:
+        """
+        Calcule la norme infinie (maximum) du vecteur.
+
+        La norme infinie est la plus grande valeur absolue parmi les composantes :
+        Pour un vecteur [x₁, x₂, ..., xₙ], norme = max(|x₁|, |x₂|, ..., |xₙ|)
+
+        Returns:
+            float: La norme infinie du vecteur
+
+        Example:
+            v = Vector([1, -5, 3])
+            v.norm_inf()  # Retourne 5 (max(|1|, |-5|, |3|) = max(1, 5, 3) = 5)
+        """
+        result = 0
+        for x in self.values:
+            if x > 0:
+                value = x
+            else:
+                value = -x
+            result = max(result, value)
+        return result
+
+    def cross_product(self, v: 'Vector') -> 'Vector':
+        """
+        Calcule le produit vectoriel avec un autre vecteur 3D.
+        Le produit vectoriel donne un vecteur perpendiculaire aux deux vecteurs d'entrée.
+
+        Args:
+            v: Second vecteur 3D
+
+        Returns:
+            Vector: Le vecteur résultant du produit vectoriel
+
+        Raises:
+            ValueError: Si les vecteurs ne sont pas de dimension 3
+        """
+        if self.shape() != 3 or v.shape() != 3:
+            raise ValueError("Cross product only works with 3D vectors")
+
+        x1, y1, z1 = self.values[0], self.values[1], self.values[2]
+        x2, y2, z2 = v.values[0], v.values[1], v.values[2]
+
+        new_x = y1 * z2 - z1 * y2
+        new_y = z1 * x2 - x1 * z2
+        new_z = x1 * y2 - y1 * x2
+
+        return Vector([new_x, new_y, new_z])

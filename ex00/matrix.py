@@ -1,3 +1,6 @@
+from ex00.vector import Vector
+
+
 class Matrix:
     def __init__(self, data):
         """
@@ -79,3 +82,54 @@ class Matrix:
         for r in range(self.rows):
             for c in range(self.cols):
                 self.values[r][c] *= scalar
+
+    def mul_vec(self, vec: Vector) -> Vector:
+        """
+        Multiplie la matrice par un vecteur.
+        Pour chaque ligne de la matrice, fait un produit scalaire avec le vecteur.
+
+        Args:
+            vec: Vecteur à multiplier (doit avoir même dimension que nombre de colonnes)
+        Returns:
+            Vector: Résultat de la multiplication
+        """
+        if self.cols != vec.shape():
+            raise ValueError("Matrix columns must match vector size")
+
+        result = []
+
+        for r in range(self.rows):
+            sum_product_row = 0
+            for c in range(self.cols):
+                sum_product_row += self.values[r][c] * vec.values[c]
+            result.append(sum_product_row)
+        return Vector(result)
+
+
+def mul_mat(self, mat: 'Matrix') -> 'Matrix':
+    """
+    Multiplie cette matrice par une autre matrice.
+    Pour chaque position (i,j) dans la matrice résultat :
+    - Prend la ligne i de la première matrice
+    - Prend la colonne j de la deuxième matrice
+    - Fait leur produit scalaire
+    """
+    if self.cols != mat.rows:
+        raise ValueError("First matrix columns must match second matrix rows")
+
+    # _ car on ne se sert pas de la variable d'itération
+    result = [[0 for _ in range(mat.cols)] for _ in range(self.rows)]
+
+    # La boucle i sélectionne quelle ligne de  la matrice A(self) on utilise
+    for i in range(self.rows):
+        # La boucle j sélectionne quelle colonne de la matrice B(mat) on utilise
+        for j in range(mat.cols):
+            sum_product = 0
+            # La boucle k nous fait avancer en même temps sur :
+            # - la ligne i de A (de gauche à droite)
+            # - la colonne j de B (de haut en bas)
+            for k in range(self.cols):  # self.cols car self.cols == mat.rows
+                sum_product += self.values[i][k] * mat.values[k][j]
+            result[i][j] = sum_product
+
+    return Matrix(result)
