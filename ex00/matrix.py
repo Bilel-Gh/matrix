@@ -19,6 +19,21 @@ class Matrix:
         if not all(len(row) == self.cols for row in self.values):
             raise ValueError("All rows must have same length")
 
+    def format_number(self, x):
+        """
+        Format a number with special handling for very small values close to zero.
+        Args:
+            x (float): The number to format.
+        Returns:
+            str: The formatted number as a string.
+        """
+        if abs(x) < 1e-10:
+            return "0.0"
+        formatted = f"{x:.7f}".rstrip('0').rstrip('.')
+        if '.' not in formatted:
+            formatted += '.0'
+        return formatted
+
     def __str__(self):
         """
         Return a string representation of the matrice.
@@ -28,7 +43,7 @@ class Matrix:
              elements separated by commas
 
         """
-        return '\n'.join(f"[{', '.join(str(x) for x in row)}]" for row in self.values)
+        return '\n'.join(f"[{', '.join(str(self.format_number(x)) for x in row)}]" for row in self.values)
 
     def shape(self):
         """
@@ -105,31 +120,64 @@ class Matrix:
             result.append(sum_product_row)
         return Vector(result)
 
+    def mul_mat(self, mat: 'Matrix') -> 'Matrix':
+        """
+        Multiplie cette matrice par une autre matrice.
+        Pour chaque position (i,j) dans la matrice résultat :
+        - Prend la ligne i de la première matrice
+        - Prend la colonne j de la deuxième matrice
+        - Fait leur produit scalaire
+        """
+        if self.cols != mat.rows:
+            raise ValueError("First matrix columns must match second matrix rows")
 
-def mul_mat(self, mat: 'Matrix') -> 'Matrix':
-    """
-    Multiplie cette matrice par une autre matrice.
-    Pour chaque position (i,j) dans la matrice résultat :
-    - Prend la ligne i de la première matrice
-    - Prend la colonne j de la deuxième matrice
-    - Fait leur produit scalaire
-    """
-    if self.cols != mat.rows:
-        raise ValueError("First matrix columns must match second matrix rows")
+        # _ car on ne se sert pas de la variable d'itération
+        result = [[0 for _ in range(mat.cols)] for _ in range(self.rows)]
 
-    # _ car on ne se sert pas de la variable d'itération
-    result = [[0 for _ in range(mat.cols)] for _ in range(self.rows)]
+        # La boucle i sélectionne quelle ligne de  la matrice A(self) on utilise
+        for i in range(self.rows):
+            # La boucle j sélectionne quelle colonne de la matrice B(mat) on utilise
+            for j in range(mat.cols):
+                sum_product = 0
+                # La boucle k nous fait avancer en même temps sur :
+                # - la ligne i de A (de gauche à droite)
+                # - la colonne j de B (de haut en bas)
+                for k in range(self.cols):  # self.cols car self.cols == mat.rows
+                    sum_product += self.values[i][k] * mat.values[k][j]
+                result[i][j] = sum_product
 
-    # La boucle i sélectionne quelle ligne de  la matrice A(self) on utilise
-    for i in range(self.rows):
-        # La boucle j sélectionne quelle colonne de la matrice B(mat) on utilise
-        for j in range(mat.cols):
-            sum_product = 0
-            # La boucle k nous fait avancer en même temps sur :
-            # - la ligne i de A (de gauche à droite)
-            # - la colonne j de B (de haut en bas)
-            for k in range(self.cols):  # self.cols car self.cols == mat.rows
-                sum_product += self.values[i][k] * mat.values[k][j]
-            result[i][j] = sum_product
+        return Matrix(result)
 
-    return Matrix(result)
+    def trace(self) -> float:
+        """
+        Calcule la trace de la matrice (somme de la diagonale principale).
+
+        Returns:
+            float: La somme des éléments diagonaux
+
+        Raises:
+            ValueError: Si la matrice n'est pas carrée
+        """
+        if self.rows != self.cols:
+            raise ValueError("Matrix must be square")
+
+        result = 0
+        for i in range(self.rows):
+            result += self.values[i][i]
+
+        return result
+
+    def transpose(self) -> 'Matrix':
+        """
+        Crée une nouvelle matrice qui est la transposée de celle-ci.
+        Les lignes deviennent les colonnes et vice-versa.
+        """
+        # Crée une nouvelle matrice avec dimensions inversées
+        # Si l'originale est 2x3(2rowx3col), la nouvelle sera 3x2(3rowx2col)
+        result = [[0 for _ in range(self.rows)] for _ in range(self.cols)]
+
+        for i in range(self.rows):
+            for j in range(self.cols):
+                result[j][i] = self.values[i][j]
+
+        return Matrix(result)
