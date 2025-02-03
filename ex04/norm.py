@@ -8,8 +8,10 @@ if __name__ == "__main__":
     u = Vector([0., 0., 0.])
     print(f"Vector: \n{u}")
     print(f"Norme 1: {u.norm_1()}")
-    # note : python contrairement a rust affiche par défaut toute la précision disponible du float
-    # python privilegie la précision maximale par défaut plutot que la lisibilite
+    # note : python contrairement a rust affiche par défaut
+    # toute la précision disponible du float
+    # python privilegie la précision maximale par défaut plutot
+    # que la lisibilite
     # 3.7416573867739413 plutot que 3.74165738
     print(f"Norme 2: {u.norm()}")
     print(f"Norme inf: {u.norm_inf()}")

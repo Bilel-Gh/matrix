@@ -9,16 +9,49 @@ class Vector:
         Attributes:
         values : A list of floats representing the vector's values.
         """
+        for value in data:
+            if not isinstance(data, list):
+                raise TypeError("Input must be a list")
+
+            if not data:
+                raise ValueError("Vector cannot be empty")
+
+            if not all(self.is_numeric(x) for x in data):
+                raise TypeError("All elements must be numeric (int or float)")
+
         self.values = [float(x) for x in data]
+
+    def is_numeric(self, value):
+        """
+        Vérifie si une valeur est numérique (int ou float)
+        """
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+    def format_number(self, x):
+        """
+        Format a number with special handling for very small values close to
+         zero.
+        Args:
+            x (float): The number to format.
+        Returns:
+            str: The formatted number as a string.
+        """
+        if abs(x) < 1e-10:
+            return "0.0"
+        formatted = f"{x:.7f}".rstrip("0").rstrip(".")
+        if "." not in formatted:
+            formatted += ".0"
+        return formatted
 
     def __str__(self):
         """
         Return a string representation of the vector.
 
         Returns:
-        str: A string where each element of the vector is enclosed in square brackets and separated by newlines.
+        str: A string where each element of the vector is enclosed in square
+         brackets and separated by newlines.
         """
-        return '\n'.join(f"[{x}]" for x in self.values)
+        return "\n".join(f"[{self.format_number(x)}]" for x in self.values)
 
     def shape(self):
         """
@@ -68,7 +101,7 @@ class Vector:
         for i in range(self.shape()):
             self.values[i] *= scalar
 
-    def dot(self, v: 'Vector') -> float:
+    def dot(self, v: "Vector") -> float:
         """
         Calcule le produit scalaire entre deux vecteurs (dot product).
 
@@ -119,7 +152,8 @@ class Vector:
         """
         Calcule la norme-2 (Euclidienne) du vecteur.
 
-        La norme-2 est la racine carrée de la somme des carrés des composantes :
+        La norme-2 est la racine carrée de la somme des carrés des
+        composantes :
         Pour un vecteur [x₁, x₂, ..., xₙ], norme = √(x₁² + x₂² + ... + xₙ²)
 
         Returns:
@@ -131,14 +165,15 @@ class Vector:
         """
         sum_squares = 0
         for x in self.values:
-            sum_squares += x * x # ou pow(x, 2)
-        return pow(sum_squares, 0.5) # pow(x, 0.5) = racine carre de x
+            sum_squares += x * x  # ou pow(x, 2)
+        return pow(sum_squares, 0.5)  # pow(x, 0.5) = racine carre de x
 
     def norm_inf(self) -> float:
         """
         Calcule la norme infinie (maximum) du vecteur.
 
-        La norme infinie est la plus grande valeur absolue parmi les composantes :
+        La norme infinie est la plus grande valeur absolue parmi les
+        composantes :
         Pour un vecteur [x₁, x₂, ..., xₙ], norme = max(|x₁|, |x₂|, ..., |xₙ|)
 
         Returns:
@@ -157,10 +192,11 @@ class Vector:
             result = max(result, value)
         return result
 
-    def cross_product(self, v: 'Vector') -> 'Vector':
+    def cross_product(self, v: "Vector") -> "Vector":
         """
         Calcule le produit vectoriel avec un autre vecteur 3D.
-        Le produit vectoriel donne un vecteur perpendiculaire aux deux vecteurs d'entrée.
+        Le produit vectoriel donne un vecteur perpendiculaire aux deux
+        vecteurs d'entrée.
 
         Args:
             v: Second vecteur 3D
@@ -171,6 +207,10 @@ class Vector:
         Raises:
             ValueError: Si les vecteurs ne sont pas de dimension 3
         """
+        # Vérification du type
+        if not isinstance(v, Vector):
+            raise TypeError("Argument must be a Vector")
+
         if self.shape() != 3 or v.shape() != 3:
             raise ValueError("Cross product only works with 3D vectors")
 

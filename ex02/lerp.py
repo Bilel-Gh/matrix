@@ -23,6 +23,13 @@ def lerp(u, v, t: float):
     Crée une copie pour éviter de modifier les valeurs d'origine.
     """
 
+    if not isinstance(t, (int, float)) and not isinstance(t, bool):
+        raise TypeError("t must be numeric (int or float)")
+    if not isinstance(u, (int, float, Vector, Matrix)):
+        raise TypeError("u must be a number, Vector, or Matrix")
+    if not isinstance(v, type(u)):
+        raise TypeError("u and v must be same type")
+
     if isinstance(u, (int, float)):
         return u + t * (v - u)
 
@@ -36,10 +43,11 @@ def lerp(u, v, t: float):
         if isinstance(u, Vector):
             for i in range(len(result.values)):
                 result.values[i] = lerp(u.values[i], v.values[i], t)
-        else: # if matrix
+        else:  # if matrix
             for i in range(len(result.values)):
                 for j in range(len(result.values[0])):
-                    result.values[i][j] = lerp(u.values[i][j], v.values[i][j], t)
+                    result.values[i][j] = lerp(u.values[i][j], v.values[i][j],
+                                               t)
 
         return result
 

@@ -1,11 +1,13 @@
 from ex00.vector import Vector
 
+
 def linear_combination(vectors: list[Vector], coefs: list[float]) -> Vector:
     """
     Linear Combination Function
 
-    La combinaison linéaire est une opération mathématique fondamentale qui combine
-    plusieurs vecteurs en les multipliant chacun par un coefficient et en les additionnant
+    La combinaison linéaire est une opération mathématique fondamentale qui
+    combine plusieurs vecteurs en les multipliant chacun par un coefficient
+    et en les additionnant
     Pour des vecteurs v₁, v₂, ..., vₙ et des coefficients c₁, c₂, ..., cₙ
     Résultat = (c₁*v₁) + (c₂*v₂) + ... + cₙvₙ
 
@@ -28,11 +30,14 @@ def linear_combination(vectors: list[Vector], coefs: list[float]) -> Vector:
         raise ValueError("list of vectors and coefs must have same len")
     if not vectors:
         raise ValueError("Lists cannot be empty")
+    if not all(isinstance(c, (int, float)) and not isinstance(c, bool) for c
+               in coefs):
+        raise TypeError("All coefficients must be numeric (int or float)")
     dim = vectors[0].shape()
     if not all(v.shape() == dim for v in vectors):
         raise ValueError("All vectors must have same dimension")
 
-    v_result = Vector([0.0] * dim) # init vector with 0 values
+    v_result = Vector([0.0] * dim)  # init vector with 0 values
 
     for vec, coef in zip(vectors, coefs):
         temp = Vector(vec.values[:])
@@ -43,14 +48,14 @@ def linear_combination(vectors: list[Vector], coefs: list[float]) -> Vector:
 
 
 if __name__ == "__main__":
-    # Test avec les exemples du sujet
-    e1 = Vector([1., 0., 0.])
-    e2 = Vector([0., 1., 0.])
-    e3 = Vector([0., 0., 1.])
-
-    result = linear_combination([e1, e2, e3], [10., -2., 0.5])
-    print(result)
+    e1 = Vector([1, 0.0, 0.0])
+    e2 = Vector([0.0, 1.0, 0.0])
+    e3 = Vector([0.0, 0.0, 1.0])
+    try:
+        result = linear_combination([e1, e2, e3], [10.0, -2.0, 0.5])
+        print(result)
+    except Exception as e:
+        print(e)
     # [10.0]
     # [-2.0]
     # [0.5]
-

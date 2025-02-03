@@ -1,5 +1,4 @@
-from ex00.matrix import Matrix
-import inverse
+from ex12.inverse import MatrixWithInverse as Matrix
 
 
 def main():
@@ -68,7 +67,9 @@ def main():
 
     # Test 5: Vérification de A * A^(-1) = I
     print("Test 5: Vérification de A * A^(-1) = I")
-    print("Le produit d'une matrice par son inverse doit donner la matrice identité")
+    print(
+        "Le produit d'une matrice par son inverse doit"
+        " donner la matrice identité")
     m5 = Matrix([
         [8., 5., -2.],
         [4., 7., 20.],
@@ -79,6 +80,7 @@ def main():
     print("Matrice originale * son inverse:")
     print(m5.mul_mat(m5_inv))  # Devrait donner la matrice identité
     print()
+
 
 if __name__ == "__main__":
     main()

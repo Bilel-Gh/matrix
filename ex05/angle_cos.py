@@ -1,6 +1,23 @@
 from ex00.vector import Vector
 
+
 def angle_cos(v: Vector, u: Vector) -> float:
+    """
+    Calculate the cosine of the angle between two vectors.
+
+    Args:
+        v (Vector): The first vector.
+        u (Vector): The second vector.
+
+    Returns:
+        float: The cosine of the angle between the two vectors.
+
+    Raises:
+        ValueError: If the vectors do not have the same length or if one or
+         both vectors are null.
+    """
+    if not isinstance(u, Vector) or not isinstance(v, Vector):
+        raise TypeError("Arguments must be Vectors")
     if v.shape() != u.shape():
         raise ValueError("vectors must have same len")
     norm_product = u.norm() * v.norm()
@@ -13,6 +30,7 @@ def angle_cos(v: Vector, u: Vector) -> float:
     if result < -0.99999999999:
         return -1.0
     return result
+
 
 if __name__ == "__main__":
     u = Vector([1., 0.])

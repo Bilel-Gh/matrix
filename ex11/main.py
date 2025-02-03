@@ -1,5 +1,5 @@
-from ex00.matrix import Matrix
-import determinant
+from ex11.determinant import MatrixWithDeterminant as Matrix
+
 
 def print_test_case(matrix, expected_result=None):
     """
@@ -12,8 +12,12 @@ def print_test_case(matrix, expected_result=None):
     print(f"Déterminant : {result}")
     if expected_result is not None:
         print(f"Résultat attendu : {expected_result}")
-        print(f"Test {'réussi' if abs(result - expected_result) < 1e-10 else 'échoué'}")
+        if abs(result - expected_result):
+            print("Test réussi")
+        else:
+            print("Test échoué")
     print()
+
 
 def main():
     # Test 1: Matrice 2x2 identité avec facteur 2
@@ -42,6 +46,7 @@ def main():
         [28., -4., 17., 1.]
     ])
     print_test_case(m3, 1032.0)
+
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,5 @@
-from ex00.matrix import Matrix
-import rank
+from ex13.rank import MatrixFinal as Matrix
+
 
 def main():
     # Test 1: Matrice identité 3x3 (rang plein = 3)
@@ -16,7 +16,8 @@ def main():
         [2, 4, 0],  # Cette ligne est le double de la première
         [0, 0, 1]
     ])
-    print("Rang de la matrice avec ligne dépendante:", m2.rank())  # Devrait afficher 2
+    print("Rang de la matrice avec ligne dépendante:",
+          m2.rank())  # Devrait afficher 2
 
     # Test 3: Matrice du sujet
     m3 = Matrix([
@@ -26,6 +27,7 @@ def main():
         [21, 18, 7]
     ])
     print("Rang de la matrice du sujet:", m3.rank())  # Devrait afficher 3
+
 
 if __name__ == "__main__":
     main()
